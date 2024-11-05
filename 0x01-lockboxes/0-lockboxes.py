@@ -4,6 +4,7 @@
 
 from collections import deque
 
+
 def canUnlockAll(boxes):
     """Determines if all the boxes can be opened"""
     n = len(boxes)
@@ -18,4 +19,3 @@ def canUnlockAll(boxes):
                 queue.append(key)  # Add new box to explore
 
     return len(unlocked) == n  # True if all boxes are unlocked
-
