@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """Solution to Lockboxes problem"""
 
+
 from collections import deque
 
 def canUnlockAll(boxes):
