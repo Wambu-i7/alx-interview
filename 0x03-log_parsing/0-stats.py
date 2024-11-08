@@ -24,15 +24,19 @@ total_file_size = 0
 status_counts = {code: 0 for code in (200, 301, 400, 401, 403, 404, 405, 500)}
 line_count = 0
 
+
 def print_stats():
-    """Prints the computed statistics: total file size and status code counts."""
+    """Prints the computed statistics: total file size and status
+    code counts."""
     print(f"File size: {total_file_size}")
     for code in sorted(status_counts):
         if status_counts[code] > 0:
             print(f"{code}: {status_counts[code]}")
 
+
 def parse_line(line):
-    """Parses a log line and updates the metrics if the line matches the format."""
+    """Parses a log line and updates the metrics if the line matches
+    the format."""
     global total_file_size
 
     parts = line.split()
@@ -49,11 +53,13 @@ def parse_line(line):
             status_counts[status_code] += 1
         total_file_size += file_size
     except (ValueError, IndexError):
-        # Skip lines that do not match the expected format for status_code or file_size
+        """Skip lines that do not match the expected format for status_code
+        or file_size"""
         pass
 
+
 def signal_handler(sig, frame):
-    """Handles keyboard interruption (CTRL + C) to print statistics before exiting."""
+    """Handles keyboard interruption (CTRL + C)."""
     print_stats()
     sys.exit(0)
 
