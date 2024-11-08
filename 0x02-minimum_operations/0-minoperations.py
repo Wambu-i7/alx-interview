@@ -2,13 +2,14 @@
 """
 Module: min_operations
 
-This module provides a function to calculate the minimum number of operations 
-needed to reach exactly 'n' 'H' characters in a text file, starting with one 'H'
+This module provides a function to calculate the minimum number of operations
+needed to reach exactly 'n' 'H' characters in a text file.
 """
+
 
 def minOperations(n):
     """
-    Returns the fewest operations needed to get exactly 'n' 'H' characters in a 
+    Returns the fewest operations needed to get exactly 'n' 'H' characters in a
     file, starting from one 'H'.
 
     Parameters:
@@ -19,14 +20,14 @@ def minOperations(n):
     """
     if n <= 1:
         return 0
-    
+
     operations = 0
     divisor = 2
-    
+
     while n > 1:
         while n % divisor == 0:
             operations += divisor
             n //= divisor
         divisor += 1
-        
+    
     return operations
