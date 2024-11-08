@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 
 
- """
+def pascal_triangle(n):
+
+    """
     Generates Pascal's triangle up to the given number of rows.
     Args:
         n (int): The number of rows of Pascal's triangle to generate.
@@ -12,9 +14,6 @@
                        Returns an empty list if n <= 0.
 """
 
-def pascal_triangle(n):
-
-    # Return an empty list if n is less than or equal to 0
     if n <= 0:
         return []
     
