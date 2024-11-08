@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 """
 This script reads log data from stdin line by line, parsing each line
 for specific metrics.
