@@ -2,7 +2,6 @@
 
 
 def pascal_triangle(n):
-
     """
     Generates Pascal's triangle up to the given number of rows.
     Args:
@@ -12,7 +11,7 @@ def pascal_triangle(n):
         list of lists: A list of lists of integers, where each inner list
                        represents a row in Pascal's triangle.
                        Returns an empty list if n <= 0.
-"""
+    """
 
     if n <= 0:
         return []
