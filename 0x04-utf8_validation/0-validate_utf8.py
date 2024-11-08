@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 """ This script defines a function `validUTF8` to check if a list of integers represents valid UTF-8 encoded characters."""
 
 
