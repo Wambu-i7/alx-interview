@@ -2,98 +2,56 @@
 
 const request = require('request');
 
-// Get the movie ID from command line arguments
-const movieID = process.argv[2];
-if (!movieID) {
-    console.log('Please provide a movie ID as the first argument.');
-    process.exit(1);
+// Get the Movie ID from command-line arguments
+const movieId = process.argv[2];
+if (!movieId) {
+  console.error('Usage: ./0-starwars_characters.js <Movie ID>');
+  process.exit(1);
 }
 
-// Define the Star Wars API endpoint for the specified movie ID
-const apiEndpoint = `https://swapi.dev/api/films/${movieID}/`;
+// Star Wars API endpoint for the specified movie
+const apiUrl = `https://swapi.dev/api/films/${movieId}/`;
 
-// Make a request to the API endpoint
-request(apiEndpoint, (error, response, body) => {
-    if (error) {
-        console.error('Error fetching data from the API:', error);
-        return;
-    }
+// Make an HTTP GET request to fetch the movie details
+request(apiUrl, (error, response, body) => {
+  if (error) {
+    console.error(error);
+    return;
+  }
 
-    // Parse the JSON response
-    const data = JSON.parse(body);
+  if (response.statusCode !== 200) {
+    console.error(`Error: ${response.statusCode}`);
+    return;
+  }
 
-    // Check if the API returned an error
-    if (!data || data.detail === 'Not found') {
-        console.log('Movie not found.');
-        return;
-    }
+  const filmData = JSON.parse(body);
 
-    // Get the list of character URLs
-    const characters = data.characters;
-
-    // Fetch and print each character's name in order
-    characters.forEach((characterURL) => {
-        request(characterURL, (error, response, body) => {
-            if (error) {
-                console.error('Error fetching character data:', error);
-                return;
-            }
-
-            // Parse the JSON response
-            const characterData = JSON.parse(body);
-
-            // Print the character's name
-            console.log(characterData.name);
-        });
+  // Fetch and print each character's name in order
+  const characters = filmData.characters;
+  const fetchCharacterName = (url) => {
+    return new Promise((resolve, reject) => {
+      request(url, (err, res, data) => {
+        if (err) reject(err);
+        if (res.statusCode === 200) {
+          const character = JSON.parse(data);
+          resolve(character.name);
+        } else {
+          reject(`Failed to fetch ${url}`);
+        }
+      });
     });
-});
-#!/usr/bin/node
+  };
 
-const request = require('request');
-
-// Get the movie ID from command line arguments
-const movieID = process.argv[2];
-if (!movieID) {
-    console.log('Please provide a movie ID as the first argument.');
-    process.exit(1);
-}
-
-// Define the Star Wars API endpoint for the specified movie ID
-const apiEndpoint = `https://swapi.dev/api/films/${movieID}/`;
-
-// Make a request to the API endpoint
-request(apiEndpoint, (error, response, body) => {
-    if (error) {
-        console.error('Error fetching data from the API:', error);
-        return;
+  // Fetch names sequentially
+  (async () => {
+    for (const characterUrl of characters) {
+      try {
+        const name = await fetchCharacterName(characterUrl);
+        console.log(name);
+      } catch (err) {
+        console.error(err);
+      }
     }
-
-    // Parse the JSON response
-    const data = JSON.parse(body);
-
-    // Check if the API returned an error
-    if (!data || data.detail === 'Not found') {
-        console.log('Movie not found.');
-        return;
-    }
-
-    // Get the list of character URLs
-    const characters = data.characters;
-
-    // Fetch and print each character's name in order
-    characters.forEach((characterURL) => {
-        request(characterURL, (error, response, body) => {
-            if (error) {
-                console.error('Error fetching character data:', error);
-                return;
-            }
-
-            // Parse the JSON response
-            const characterData = JSON.parse(body);
-
-            // Print the character's name
-            console.log(characterData.name);
-        });
-    });
+  })();
 });
 
