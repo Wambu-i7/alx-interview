@@ -12,46 +12,54 @@ if (!movieId) {
 // Star Wars API endpoint for the specified movie
 const apiUrl = `https://swapi.dev/api/films/${movieId}/`;
 
-// Make an HTTP GET request to fetch the movie details
+// Fetch movie details
 request(apiUrl, (error, response, body) => {
   if (error) {
-    console.error(error);
+    console.error('Error fetching movie details:', error);
     return;
   }
 
   if (response.statusCode !== 200) {
-    console.error(`Error: ${response.statusCode}`);
+    console.error(`Error: Received status code ${response.statusCode}`);
     return;
   }
 
-  const filmData = JSON.parse(body);
+  try {
+    const filmData = JSON.parse(body);
+    const characters = filmData.characters;
 
-  // Fetch and print each character's name in order
-  const characters = filmData.characters;
-  const fetchCharacterName = (url) => {
-    return new Promise((resolve, reject) => {
-      request(url, (err, res, data) => {
-        if (err) reject(err);
-        if (res.statusCode === 200) {
-          const character = JSON.parse(data);
-          resolve(character.name);
-        } else {
-          reject(`Failed to fetch ${url}`);
-        }
+    // Fetch all character names in parallel
+    const characterPromises = characters.map((url) => {
+      return new Promise((resolve, reject) => {
+        request(url, (err, res, data) => {
+          if (err) {
+            reject(new Error(`Error fetching character data: ${err}`));
+            return;
+          }
+
+          if (res.statusCode === 200) {
+            try {
+              const character = JSON.parse(data);
+              resolve(character.name);
+            } catch (parseError) {
+              reject(new Error(`Error parsing character data: ${parseError}`));
+            }
+          } else {
+            reject(new Error(`Failed to fetch ${url}. Status code: ${res.statusCode}`));
+          }
+        });
       });
     });
-  };
 
-  // Fetch names sequentially
-  (async () => {
-    for (const characterUrl of characters) {
-      try {
-        const name = await fetchCharacterName(characterUrl);
-        console.log(name);
-      } catch (err) {
-        console.error(err);
-      }
-    }
-  })();
+    // Resolve all promises and print names in order
+    Promise.all(characterPromises)
+      .then((names) => {
+        names.forEach((name) => console.log(name));
+      })
+      .catch((err) => {
+        console.error('Error fetching character names:', err);
+      });
+  } catch (parseError) {
+    console.error('Error parsing movie data:', parseError);
+  }
 });
-
