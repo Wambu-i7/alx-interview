@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 """prime Game"""
+
+
 def isWinner(x, nums):
     """Determines the winner of the prime Game"""
 
@@ -8,7 +10,7 @@ def isWinner(x, nums):
 
     # Determine the maximum n for prime sieve
     max_n = max(nums)
-    
+
     # Create a sieve to find all primes up to max_n
     sieve = [True] * (max_n + 1)
     sieve[0] = sieve[1] = False  # 0 and 1 are not prime
@@ -40,4 +42,3 @@ def isWinner(x, nums):
         return "Ben"
     else:
         return None
-
