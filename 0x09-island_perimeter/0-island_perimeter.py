@@ -3,12 +3,13 @@
 Perimeter of an island.
 """
 
+
 def island_perimeter(grid):
     """
     Calculate the perimeter of an island described in a grid.
 
     Args:
-        grid (list of list of int): 2D grid where 0 represents water and 1 represents land.
+        grid: 2D grid where 0 represents water and 1 represents land.
 
     Returns:
         int: Perimeter of the island.
